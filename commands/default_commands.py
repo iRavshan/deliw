@@ -1,0 +1,5 @@
+make_order = "🛒 Buyurtma berish"
+contact = "📞 Call markaz"
+about = "💧 Suv haqida"
+request_location = "📍Manzilimni yuborish"
+request_contact = "📞 Telefon raqamimni yuborish"
