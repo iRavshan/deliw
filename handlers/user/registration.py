@@ -15,11 +15,10 @@ router = Router()
 @router.message(F.text, Command(registration))
 async def start_registration(message: Message, state: FSMContext) -> None:
     ex_user = users.find_one({"tg_id": message.from_user.id})
-    try:
-        if(ex_user["is_registered"] is not False):
-            await message.answer(f"Siz ro'yxatdan o'tgansiz. Marhamat pastdagi tugma orqali buyurtma bering 👇🏻", 
-                                 reply_markup=auth_user_menu_markup())
-    except KeyError:
+    if(ex_user["is_registered"] is not False):
+        await message.answer(f"Siz ro'yxatdan o'tgansiz. Marhamat pastdagi tugma orqali buyurtma bering 👇🏻", 
+                             reply_markup=auth_user_menu_markup())
+    else:
         await state.set_state(UserRegistrationState.firstname)
         await message.answer(f"Ismingizni yozing",
                              reply_markup=ReplyKeyboardRemove())
