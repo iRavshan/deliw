@@ -17,13 +17,14 @@ async def command_start(message: Message) -> None:
     if(ex_user is None):
         new_user = {
             "tg_id": message.from_user.id,
-            "created_at": datetime.now()
+            "created_at": datetime.now(),
+            "is_registered": False
         }
         users.insert_one(new_user)
         await message.answer(f"Siz hali ro'yxatdan o'tmagansiz. Iltimos ro'yxatdan o'tish uchun ushbu buyruqni bosing /{registration}", 
                              reply_markup=user_menu_markup())
     
-    elif(ex_user["firstname"] is None):
+    elif(ex_user["is_registered"] is False):
         await message.answer(f"Siz hali ro'yxatdan o'tmagansiz. Iltimos ro'yxatdan o'tish uchun ushbu buyruqni bosing /{registration}",
                              reply_markup=user_menu_markup())
     

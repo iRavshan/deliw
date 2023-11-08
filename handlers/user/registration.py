@@ -16,7 +16,7 @@ router = Router()
 async def start_registration(message: Message, state: FSMContext) -> None:
     ex_user = users.find_one({"tg_id": message.from_user.id})
     try:
-        if(ex_user["firstname"] is not None):
+        if(ex_user["is_registered"] is not False):
             await message.answer(f"Siz ro'yxatdan o'tgansiz. Marhamat pastdagi tugma orqali buyurtma bering 👇🏻", 
                                  reply_markup=auth_user_menu_markup())
     except KeyError:
@@ -60,6 +60,7 @@ async def get_data_and_create_user(message: Message, data: Dict[str, Any]) -> No
         "firstname": firstname,
         "address": address,
         "phone": phone,
+        "is_registered": True
     }
     users.find_one_and_update({"tg_id": message.from_user.id},
                               {"$set": new_user})
