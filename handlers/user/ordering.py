@@ -36,7 +36,7 @@ async def get_numbers(message: Message, state: FSMContext) -> None:
         else:
             await message.answer(f"<b>❕ Buyurtma soni faqat 0 dan katta sonda bo'la oladi</b>")
     else:
-        await message.answer(f"<b>❕ Buyurtma soni faqat 0 dan katta sonda bo'la oladi</b>")
+        await message.answer(f"<b>❕ Buyurtma sonini faqat raqamlarda kiriting</b>")
 
 async def get_data(message: Message, data: Dict[str, Any]) -> None:
     user = user_repository.find_by_id(message.from_user.id)
