@@ -25,16 +25,15 @@ async def start_order(message: Message, state: FSMContext) -> None:
 async def get_numbers(message: Message, state: FSMContext) -> None:
     msg = message.text
     if(msg.isdigit()):
-        if(int(msg) > 0):
+        if(int(msg) > 0 and len(msg) < 6):
             data = await state.update_data(numbers=message.text)
             await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b>", 
-                                 reply_markup=auth_user_menu_markup())
+                                     reply_markup=auth_user_menu_markup())
             await get_data(message, data)
         else:
             await message.answer(f"<b>❕ Buyurtma soni faqat 0 dan katta sonda bo'la oladi</b>")
     else:
         await message.answer(f"<b>❕ Buyurtma soni faqat 0 dan katta sonda bo'la oladi</b>")
-
 
 async def get_data(message: Message, data: Dict[str, Any]) -> None:
     user = user_repository.find_by_id(message.from_user.id)
