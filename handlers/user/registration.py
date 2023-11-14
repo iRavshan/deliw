@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message, ReplyKeyboardRemove
+from aiogram.types import Message, ReplyKeyboardRemove, ContentType
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from typing import Any, Dict
@@ -20,6 +20,7 @@ async def start_registration(message: Message, state: FSMContext) -> None:
         await message.answer(f"Siz ro'yxatdan o'tgansiz. Marhamat pastdagi tugma orqali buyurtma bering 👇🏻", 
                              reply_markup=auth_user_menu_markup())
     else:
+        await state.clear()
         await state.set_state(UserRegistrationState.firstname)
         await message.answer(f"Ismingizni yozing",
                              reply_markup=ReplyKeyboardRemove())
@@ -35,26 +36,30 @@ async def get_name(message: Message, state: FSMContext) -> None:
 
 @router.message(UserRegistrationState.phone)
 async def get_phone(message: Message, state: FSMContext) -> None:
-    await state.update_data(phone=message.contact.phone_number)
-    await state.set_state(UserRegistrationState.address)
-    await message.answer(f"Manzilingiz", reply_markup=request_location.request_location())
+    if(message.content_type == ContentType.CONTACT):
+        await state.update_data(phone=message.contact.phone_number)
+        await state.set_state(UserRegistrationState.address)
+        await message.answer(f"Manzilingiz", reply_markup=request_location.request_location())
+    else:
+        await message.answer(f"Iltimos telefon raqamingizni yuboring")
 
 
 @router.message(UserRegistrationState.address)
 async def get_address(message: Message, state: FSMContext) -> None:
-    data = await state.update_data(address=message.location)
-    await state.clear()
-    firstname = data["firstname"]
-    address = data["address"]
-    phone = data["phone"]
-    await message.answer(text="Ro'yxatdan o'tish yakunlandi", 
+    if(message.content_type == ContentType.LOCATION):
+        await state.update_data(latitude=message.location.latitude)
+        data = await state.update_data(longitude=message.location.longitude)
+        await state.clear()
+        await message.answer(text="Ro'yxatdan o'tish yakunlandi", 
                          reply_markup=auth_user_menu_markup())
-    await get_data_and_create_user(message, data)
-
+        await get_data_and_create_user(message, data)
+    else:
+        await message.answer(text="Iltimos pastdagi tugma orqali manzilingizni yuboring")
 
 async def get_data_and_create_user(message: Message, data: Dict[str, Any]) -> None:
     firstname = data["firstname"]
-    address = data["address"]
     phone = data["phone"]
-    user = User()
-    user_repo.create(new_user)
+    longitude = data["longitude"]
+    latitude = data["latitude"]
+    user = User(firstname=firstname, phone=phone, latitude=latitude, longitude=longitude)
+    user_repo.update(message.from_user.id, user)

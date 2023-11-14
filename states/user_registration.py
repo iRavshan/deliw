@@ -4,3 +4,5 @@ class UserRegistrationState(StatesGroup):
     firstname = State()
     address = State()
     phone = State()
+    latitude = State()
+    longitude = State()
