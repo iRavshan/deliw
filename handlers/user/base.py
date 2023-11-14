@@ -1,30 +1,26 @@
-from datetime import datetime
-from loader import users
 from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import CommandStart
 from commands.slash_commands import registration
 from commands.default_commands import contact, about
 from keyboards.default.menu_for_user import user_menu_markup, auth_user_menu_markup
+from data.repositories.user_repository import UserRepository
+from data.models import User
 
 router = Router()
+user_repository = UserRepository()
  
 @router.message(CommandStart())
 async def command_start(message: Message) -> None:
-
-    ex_user = users.find_one({"tg_id": message.from_user.id})
-    
+    user_id = message.from_user.id
+    ex_user = user_repository.find_by_id(user_id)
     if(ex_user is None):
-        new_user = {
-            "tg_id": message.from_user.id,
-            "created_at": datetime.now(),
-            "is_registered": False
-        }
-        users.insert_one(new_user)
+        new_user = User(tgId=user_id)
+        user_repository.create(new_user)
         await message.answer(f"Siz hali ro'yxatdan o'tmagansiz. Iltimos ro'yxatdan o'tish uchun ushbu buyruqni bosing /{registration}", 
                              reply_markup=user_menu_markup())
     
-    elif(ex_user["is_registered"] is False):
+    elif(ex_user.is_registered is False):
         await message.answer(f"Siz hali ro'yxatdan o'tmagansiz. Iltimos ro'yxatdan o'tish uchun ushbu buyruqni bosing /{registration}",
                              reply_markup=user_menu_markup())
     

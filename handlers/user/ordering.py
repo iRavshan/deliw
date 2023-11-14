@@ -1,6 +1,6 @@
 from aiogram import Router, F
 from datetime import datetime
-from loader import users, orders, bot
+from loader import bot
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.filters import Command
 from states.user_order import UserOrder

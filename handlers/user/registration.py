@@ -1,5 +1,3 @@
-from datetime import datetime
-from loader import users
 from aiogram import Router, F
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.filters import Command
@@ -9,13 +7,16 @@ from states.user_registration import UserRegistrationState
 from commands.slash_commands import registration
 from keyboards.default.menu_for_user import user_menu_markup, auth_user_menu_markup
 from keyboards.default import request_contact, request_location
+from data.repositories.user_repository import UserRepository
+from data.models import User
 
 router = Router()
+user_repo = UserRepository()
 
 @router.message(F.text, Command(registration))
 async def start_registration(message: Message, state: FSMContext) -> None:
-    ex_user = users.find_one({"tg_id": message.from_user.id})
-    if(ex_user["is_registered"] is not False):
+    ex_user = user_repo.find_by_id(message.from_user.id)
+    if(ex_user.is_registered is not False):
         await message.answer(f"Siz ro'yxatdan o'tgansiz. Marhamat pastdagi tugma orqali buyurtma bering 👇🏻", 
                              reply_markup=auth_user_menu_markup())
     else:
@@ -55,11 +56,5 @@ async def get_data_and_create_user(message: Message, data: Dict[str, Any]) -> No
     firstname = data["firstname"]
     address = data["address"]
     phone = data["phone"]
-    new_user = {
-        "firstname": firstname,
-        "address": address,
-        "phone": phone,
-        "is_registered": True
-    }
-    users.find_one_and_update({"tg_id": message.from_user.id},
-                              {"$set": new_user})
+    user = User()
+    user_repo.create(new_user)
