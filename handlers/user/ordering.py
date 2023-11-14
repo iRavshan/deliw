@@ -26,10 +26,13 @@ async def get_numbers(message: Message, state: FSMContext) -> None:
     msg = message.text
     if(msg.isdigit()):
         if(int(msg) > 0):
-            data = await state.update_data(numbers=message.text)
-            await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b>", 
-                                     reply_markup=auth_user_menu_markup())
-            await get_data(message, data)
+            if(len(msg) < 6):
+                data = await state.update_data(numbers=message.text)
+                await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b>", 
+                                     eply_markup=auth_user_menu_markup())
+                await get_data(message, data)
+            else:
+                await message.answer(f"<b>❕ Buyurtma soni maksimal 10 000 bo'lishi mumkin</b>")
         else:
             await message.answer(f"<b>❕ Buyurtma soni faqat 0 dan katta sonda bo'la oladi</b>")
     else:
