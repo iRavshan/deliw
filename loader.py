@@ -1,14 +1,18 @@
+import os
+import psycopg2
 import sqlalchemy as orm
+from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
-import psycopg2
 
-HOST = "viaduct.proxy.rlwy.net"
-PORT = "58784"
-USER = "postgres"
-PASSWORD = "E-GG32f2A5BfF3DCfG-dG3D3*Ef6f-g4"
-DB_NAME = "railway"
-TOKEN = "6766715274:AAGRMYuQVlLDyA9g5GAn1pBMI5sgLWQMex0"
+load_dotenv()
+
+HOST = os.environ.get('DB_HOST')
+PORT = os.environ.get('DB_PORT')
+USER = os.environ.get('DB_USER')
+PASSWORD = os.environ.get('DB_PASSWORD')
+DB_NAME = os.environ.get('DB_NAME')
+TOKEN = os.environ.get('BOT_TOKEN')
 
 bot = Bot(token=TOKEN, parse_mode=ParseMode.HTML)
 dp = Dispatcher()
