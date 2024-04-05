@@ -31,7 +31,6 @@ async def command_start(message: Message) -> None:
                              reply_markup=auth_user_menu_markup())
 
 
-
 #-------- /INFO -------#
 @router.message(F.text == about)
 async def command_info_button(message: Message) -> None:
@@ -42,7 +41,7 @@ async def command_info_menu(message: Message) -> None:
     await send_info(message)
 
 async def send_info(message: Message):
-    await message.answer("<b>MUMTAZ - tabiiy ichimlik suvi</b>\n\n💠 Zam-zam suvi bilan to'yintirilgan\n💠 Tabiiy tog' suvi\n💠 10 bosqichli filtrda tozalangan\n💠 Uyingiz va ofisingiz uchun eng ma'qul\n🚗 Yetkazib berish mutlaqo <b>BEPUL</b>\n\n<b>💎 19 litr - 10.000 so'm</b>\n\n@mumtaz_suv_bot orqali oson buyurtma bering")
+    await message.answer("<b>Zamin Water - tabiiy ichimlik suvi</b>\n\n💠 Tabiiy tog' suvi\n💠 10 bosqichli filtrda tozalangan\n💠 Uyingiz va ofisingiz uchun eng ma'qul\n🚗 Yetkazib berish mutlaqo <b>BEPUL</b>\n\n<b>💎 19 litr - 10.000 so'm</b>\n\n@mumtaz_suv_bot orqali oson buyurtma bering")
 
 
 #-------- /ALOQA -------#

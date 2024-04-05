@@ -1,4 +1,5 @@
 make_order = "🛒 Buyurtma berish"
+active_orders = "📄 Buyurtmalarim"
 contact = "📞 Call markaz"
 about = "💧 Suv haqida"
 request_location = "📍Manzilimni yuborish"
