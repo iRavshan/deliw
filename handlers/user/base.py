@@ -28,7 +28,7 @@ async def command_start(message: Message) -> None:
     
     else:
         await message.answer(f"Siz ro'yxatdan o'tgansiz. Marhamat pastdagi tugma orqali buyurtma bering 👇🏻", 
-                             reply_markup=auth_user_menu_markup())
+                             reply_markup=user_menu_markup())
 
 
 #-------- /INFO -------#
@@ -41,7 +41,7 @@ async def command_info_menu(message: Message) -> None:
     await send_info(message)
 
 async def send_info(message: Message):
-    await message.answer("<b>Zamin Water - tabiiy ichimlik suvi</b>\n\n💠 Tabiiy tog' suvi\n💠 10 bosqichli filtrda tozalangan\n💠 Uyingiz va ofisingiz uchun eng ma'qul\n🚗 Yetkazib berish mutlaqo <b>BEPUL</b>\n\n<b>💎 19 litr - 10.000 so'm</b>\n\n@mumtaz_suv_bot orqali oson buyurtma bering")
+    await message.answer("<b>Zamin Water - tabiiy ichimlik suvi</b>\n\n💠 Tabiiy tog' suvi\n💠 10 bosqichli filtrda tozalangan\n💠 Uyingiz va ofisingiz uchun eng ma'qul\n🚗 Yetkazib berish mutlaqo <b>BEPUL</b>\n\n<b>💎 19 litr - 10.000 so'm</b>\n\n@zamin_water_bot orqali oson buyurtma bering")
 
 
 #-------- /ALOQA -------#
@@ -54,7 +54,7 @@ async def command_contact_menu(message: Message) -> None:
     await send_contact(message)
 
 async def send_contact(message: Message):
-    await message.answer("<b>Barcha viloyatlar uchun yagona ishonch telefoni:</b>\n\n📞 +998555008686 ")
+    await message.answer("<b>Barcha viloyatlar uchun aloqa telefonlari:</b>\n\n📞 +998996740440\n\n📞 +998993710440")
 
 
 #-------- /SOZLAMALAR -------#

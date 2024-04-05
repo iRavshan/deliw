@@ -6,7 +6,7 @@ from states.user_order import UserOrder
 from aiogram.fsm.context import FSMContext
 from typing import Any, Dict
 from commands.default_commands import make_order
-from keyboards.default.menu_for_user import auth_user_menu_markup
+from keyboards.default.menu_for_user import user_menu_markup
 from data.repositories.user_repository import UserRepository
 from data.repositories.order_repository import OrderRepository, Order
 
@@ -29,7 +29,7 @@ async def get_numbers(message: Message, state: FSMContext) -> None:
             if(len(msg) < 6):
                 data = await state.update_data(numbers=message.text)
                 await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b>", 
-                                     reply_markup=auth_user_menu_markup())
+                                     reply_markup=user_menu_markup())
                 await get_data(message, data)
             else:
                 await message.answer(f"<b>❕ Buyurtma soni maksimal 10 000 bo'lishi mumkin</b>")
