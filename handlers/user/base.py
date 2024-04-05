@@ -1,14 +1,16 @@
 from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import CommandStart, Command
-from commands.slash_commands import registration, aloqa, info
-from commands.default_commands import contact, about
-from keyboards.default.menu_for_user import user_menu_markup
+from commands.menu_commands import aloqa, info, my_orders
+from commands.keyboard_commands import contact, about, active_orders, make_order
+from keyboards.default.keyboard_for_user import user_menu_markup
 from data.repositories.user_repository import UserRepository
+from data.repositories.order_repository import OrderRepository
 from data.models import User
 
 router = Router()
 user_repository = UserRepository()
+order_repository = OrderRepository()
  
 
 #-------- /START -------#
@@ -19,16 +21,8 @@ async def command_start(message: Message) -> None:
     if(ex_user is None):
         new_user = User(tgId=user_id)
         user_repository.create(new_user)
-        await message.answer(f"Siz hali ro'yxatdan o'tmagansiz. Iltimos ro'yxatdan o'tish uchun ushbu buyruqni bosing /{registration}", 
-                             reply_markup=user_menu_markup())
     
-    elif(ex_user.is_registered is False):
-        await message.answer(f"Siz hali ro'yxatdan o'tmagansiz. Iltimos ro'yxatdan o'tish uchun ushbu buyruqni bosing /{registration}",
-                             reply_markup=user_menu_markup())
-    
-    else:
-        await message.answer(f"Siz ro'yxatdan o'tgansiz. Marhamat pastdagi tugma orqali buyurtma bering 👇🏻", 
-                             reply_markup=user_menu_markup())
+    await message.answer("Assalomu alaykum!\n\nZamin Water - tabiiy buloq suvi", reply_markup=user_menu_markup()) 
 
 
 #-------- /INFO -------#
@@ -49,7 +43,7 @@ async def send_info(message: Message):
 async def command_contact_button(message: Message) -> None:
     await send_contact(message)
 
-@router.message(Command('aloqa'))
+@router.message(Command(aloqa))
 async def command_contact_menu(message: Message) -> None:
     await send_contact(message)
 
@@ -57,7 +51,28 @@ async def send_contact(message: Message):
     await message.answer("<b>Barcha viloyatlar uchun aloqa telefonlari:</b>\n\n📞 +998996740440\n\n📞 +998993710440")
 
 
-#-------- /SOZLAMALAR -------#
-@router.message(Command('sozlamalar'))
-async def command_settings_menu(message: Message) -> None:
-    await message.answer("⚙️ Hozircha ma'lumotlarni o'zgartirishning imkoni yo'q")
+#-------- /Buyurtmalarim -------#
+@router.message(F.text == active_orders)
+async def command_orders_button(message: Message) -> None:
+    await get_active_orders(message)
+
+@router.message(Command(my_orders))
+async def command_orders_menu(message: Message) -> None:
+    await get_active_orders(message)
+
+async def get_active_orders(message: Message):
+    user = user_repository.find_by_id(message.from_user.id)
+    
+    if(user is None):
+        await message.answer(f"Siz hali buyurtma bermagansiz. Buyurtma berish uchun ushbu buyruqni\n /{my_orders}\nyoki pastdagi menyudan «{make_order}» tugmasini bosing")
+    else:
+        orders = order_repository.get_active_orders(message.from_user.id)
+        
+        if(orders.count == 0):
+            await message.answer(f"Barcha buyurtmalaringiz yetkazib berilgan")
+        else:
+            for order in orders:
+                await message.answer(f''' <b>📥 BUYURTMA</b>\n\n<b>Buyurtma vaqti: </b>{order.created_at}\n\n<b>Buyurtma soni: </b>{order.numbers} ta\n\n@zamin_water_bot''')
+
+
+

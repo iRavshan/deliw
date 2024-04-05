@@ -12,4 +12,8 @@ class OrderRepository:
         self.session.add(order)
         self.session.commit()
         return order
-            
+    
+    def get_active_orders(self, user_id):
+        stmt = select(Order).where(Order.user_id == user_id)
+        orders = self.session.scalars(stmt).all()
+        return orders
