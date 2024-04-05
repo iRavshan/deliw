@@ -3,7 +3,7 @@ from aiogram.types import Message
 from aiogram.filters import CommandStart, Command
 from commands.slash_commands import registration, aloqa, info
 from commands.default_commands import contact, about
-from keyboards.default.menu_for_user import user_menu_markup, auth_user_menu_markup
+from keyboards.default.menu_for_user import user_menu_markup
 from data.repositories.user_repository import UserRepository
 from data.models import User
 
