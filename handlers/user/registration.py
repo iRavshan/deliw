@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from typing import Any, Dict
 from states.user_registration import UserRegistrationState
 from commands.slash_commands import registration
-from keyboards.default.menu_for_user import user_menu_markup, auth_user_menu_markup
+from keyboards.default.menu_for_user import user_menu_markup
 from keyboards.default import request_contact, request_location
 from data.repositories.user_repository import UserRepository
 from data.models import User
@@ -18,7 +18,7 @@ async def start_registration(message: Message, state: FSMContext) -> None:
     ex_user = user_repo.find_by_id(message.from_user.id)
     if(ex_user.is_registered is not False):
         await message.answer(f"Siz ro'yxatdan o'tgansiz. Marhamat pastdagi tugma orqali buyurtma bering 👇🏻", 
-                             reply_markup=auth_user_menu_markup())
+                             reply_markup=user_menu_markup())
     else:
         await state.clear()
         await state.set_state(UserRegistrationState.firstname)
@@ -51,7 +51,7 @@ async def get_address(message: Message, state: FSMContext) -> None:
         data = await state.update_data(longitude=message.location.longitude)
         await state.clear()
         await message.answer(text="Ro'yxatdan o'tish yakunlandi", 
-                         reply_markup=auth_user_menu_markup())
+                         reply_markup=user_menu_markup())
         await get_data_and_create_user(message, data)
     else:
         await message.answer(text="Iltimos pastdagi tugma orqali manzilingizni yuboring")
