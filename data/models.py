@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from loader import db_engine
+import pytz
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase
@@ -33,6 +34,8 @@ class Order(Base):
     user_id: Mapped[str] = mapped_column(ForeignKey("users.tgId"))
     user: Mapped["User"] = relationship(back_populates="orders")
     numbers: Mapped[int]
-    created_at: Mapped[datetime] = mapped_column(default=datetime.utcnow() + timedelta(hours=5))
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now(pytz.timezone('Asia/Tashkent')))
 
-Base.metadata.create_all(bind=db_engine)
+
+def migrate_data():
+    Base.metadata.create_all(bind=db_engine)
