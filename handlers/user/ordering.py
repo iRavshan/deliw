@@ -93,6 +93,10 @@ async def get_phone(message: Message, state: FSMContext) -> None:
         await state.update_data(phone=message.contact.phone_number)
         await state.set_state(UserRegistrationState.address)
         await message.answer(f"Manzilingiz", reply_markup=request_location.request_location())
+    elif(message.content_type == ContentType.TEXT and len(message.text) > 8):
+        await state.update_data(phone=message.text)
+        await state.set_state(UserRegistrationState.address)
+        await message.answer(f"Manzilingiz", reply_markup=request_location.request_location())
     else:
         await message.answer(f"Iltimos telefon raqamingizni yuboring")
 
@@ -106,7 +110,7 @@ async def get_address(message: Message, state: FSMContext) -> None:
         await get_data_and_create_user(message, data)
         await start_order(message, state)
     else:
-        await message.answer(text="Iltimos pastdagi tugma orqali manzilingizni yuboring")
+        await message.answer(text="Iltimos pastdagi «📍Manzilimni yuborish» tugmasi orqali manzilingizni yuboring")
 
 
 async def get_data_and_create_user(message: Message, data: Dict[str, Any]) -> None:
@@ -119,6 +123,6 @@ async def get_data_and_create_user(message: Message, data: Dict[str, Any]) -> No
     
 
 @router.callback_query(F.data == 'cancel')
-def clear_state(query: CallbackQuery, state: FSMContext) -> None:
+async def clear_state(query: CallbackQuery, state: FSMContext) -> None:
     state.clear()
     await query.answer(f"Amal bekor qilindi 🤚🏻", reply_markup=user_menu_markup())
