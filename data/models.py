@@ -10,6 +10,7 @@ from typing import List
 from typing import Optional
 from uuid import UUID, uuid4 
 
+
 class Base(DeclarativeBase):
     pass
 
@@ -28,7 +29,7 @@ class User(Base):
 
 class Order(Base):
     __tablename__="orders"
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4())
     user_id: Mapped[str] = mapped_column(ForeignKey("users.tgId"))
     user: Mapped["User"] = relationship(back_populates="orders")
     numbers: Mapped[int]

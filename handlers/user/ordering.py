@@ -1,18 +1,21 @@
-from aiogram import Router, F
 from loader import bot
-from aiogram.types import Message, ReplyKeyboardRemove, ContentType
-from aiogram.filters import Command
-from states.user_order import UserOrder
-from states.user_registration import UserRegistrationState
+from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
-from typing import Any, Dict
+from aiogram.filters import Command
+from aiogram.filters.callback_data import CallbackData
+from aiogram.types import Message, ContentType, CallbackQuery
 from commands.keyboard_commands import make_order as kb_make_order
 from commands.menu_commands import make_order as menu_make_order
-from keyboards.default import request_contact, request_location
-from keyboards.default.keyboard_for_user import user_menu_markup
+from data.models import User
 from data.repositories.user_repository import UserRepository
 from data.repositories.order_repository import OrderRepository, Order
-from data.models import User
+from keyboards.default import request_contact, request_location
+from keyboards.default.keyboard_for_user import user_menu_markup
+from keyboards.inline.cancellation_keyboard import cancellation_markup
+from states.user_order import UserOrder
+from states.user_registration import UserRegistrationState
+from typing import Any, Dict
+
 
 user_repository = UserRepository()
 order_repository = OrderRepository()
@@ -37,7 +40,7 @@ async def start_order(message: Message, state: FSMContext)-> None:
     else:
         await state.set_state(UserOrder.numbers)
         await message.answer(f"Nechta suv buyurtma qilmoqchisiz?", 
-                            reply_markup=ReplyKeyboardRemove())
+                            reply_markup=cancellation_markup())
 
 
 @router.message(UserOrder.numbers)
@@ -64,10 +67,10 @@ async def get_data_and_make_order(message: Message, data: Dict[str, Any]) -> Non
     new_order = Order(numbers=data["numbers"])
     new_order.user_id = user.tgId
     new_order = order_repository.create(new_order)
-    
-    for user_id in ["5719584090", "1919256193"]:
-        await bot.send_message(chat_id=user_id, text=f''' <b>📥 YANGI BUYURTMA</b>\n\n<b>Mijoz: </b><i>{user.firstname}</i>\n\n<b>Telefon raqam: </b>{user.phone}\n\n<b>Buyurtma vaqti: </b>{new_order.created_at}\n\n<b>Buyurtma soni: </b>{new_order.numbers} ta\n\n@zamin_water_bot''')
-        await bot.send_location(chat_id=user_id, latitude=user.latitude, longitude=user.longitude)
+    admins = ["5719584090", "1919256193", "806335725"]
+    for i in range(0, len(admins)):
+        await bot.send_message(chat_id=admins[i], text=f''' <b>📥 YANGI BUYURTMA</b>\n\n<b>Mijoz: </b><i>{user.firstname}</i>\n\n<b>Telefon raqam: </b>{user.phone}\n\n<b>Buyurtma vaqti: </b>{new_order.created_at}\n\n<b>Buyurtma soni: </b>{new_order.numbers} ta\n\n@zamin_water_bot''')
+        await bot.send_location(chat_id=admins[i], latitude=user.latitude, longitude=user.longitude)
 
 
 #-------- /REGISTRATION -------#
@@ -114,4 +117,8 @@ async def get_data_and_create_user(message: Message, data: Dict[str, Any]) -> No
     user = User(firstname=firstname, phone=phone, latitude=latitude, longitude=longitude)
     user_repository.update(message.from_user.id, user)
     
-    
+
+@router.callback_query(F.data == 'cancel')
+def clear_state(query: CallbackQuery, state: FSMContext) -> None:
+    state.clear()
+    await query.answer(f"Amal bekor qilindi 🤚🏻", reply_markup=user_menu_markup())
