@@ -22,10 +22,12 @@ router = Router()
 @router.message(F.text == kb_make_order)
 async def start_order(message: Message, state: FSMContext) -> None:
     await start_order(message, state)
+  
     
 @router.message(Command(menu_make_order))
 async def start_order(message: Message, state: FSMContext) -> None:
     await start_order(message, state)
+
 
 async def start_order(message: Message, state: FSMContext)-> None:
     await state.clear()
@@ -48,7 +50,7 @@ async def get_numbers(message: Message, state: FSMContext) -> None:
                 await state.clear()
                 await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b>", 
                                      reply_markup=user_menu_markup())
-                await get_data(message, data)
+                await get_data_and_make_order(message, data)
             else:
                 await message.answer(f"<b>❕ Buyurtma soni maksimal 10 000 bo'lishi mumkin</b>")
         else:
@@ -57,13 +59,15 @@ async def get_numbers(message: Message, state: FSMContext) -> None:
         await message.answer(f"<b>❕ Buyurtma sonini faqat raqamlarda kiriting</b>")
 
 
-async def get_data(message: Message, data: Dict[str, Any]) -> None:
+async def get_data_and_make_order(message: Message, data: Dict[str, Any]) -> None:
     user = user_repository.find_by_id(message.from_user.id)
     new_order = Order(numbers=data["numbers"])
     new_order.user_id = user.tgId
     new_order = order_repository.create(new_order)
-    await bot.send_message(chat_id="1919256193", text=f''' <b>📥 YANGI BUYURTMA</b>\n\n<b>Mijoz: </b><i>{user.firstname}</i>\n\n<b>Telefon raqam: </b>{user.phone}\n\n<b>Buyurtma vaqti: </b>{new_order.created_at}\n\n<b>Buyurtma soni: </b>{new_order.numbers} ta\n\n@zamin_water_bot''')
-    await bot.send_location(chat_id="1919256193", latitude=user.latitude, longitude=user.longitude)
+    
+    for user_id in ["5719584090", "1919256193"]:
+        await bot.send_message(chat_id=user_id, text=f''' <b>📥 YANGI BUYURTMA</b>\n\n<b>Mijoz: </b><i>{user.firstname}</i>\n\n<b>Telefon raqam: </b>{user.phone}\n\n<b>Buyurtma vaqti: </b>{new_order.created_at}\n\n<b>Buyurtma soni: </b>{new_order.numbers} ta\n\n@zamin_water_bot''')
+        await bot.send_location(chat_id=user_id, latitude=user.latitude, longitude=user.longitude)
 
 
 #-------- /REGISTRATION -------#

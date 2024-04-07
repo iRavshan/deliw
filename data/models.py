@@ -1,13 +1,14 @@
+from datetime import datetime, timedelta
 from loader import db_engine
-from typing import List
-from typing import Optional
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from datetime import datetime, timedelta
+from typing import List
+from typing import Optional
+from uuid import UUID, uuid4 
 
 class Base(DeclarativeBase):
     pass
