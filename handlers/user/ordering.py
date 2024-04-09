@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 from aiogram.filters.callback_data import CallbackData
 from aiogram.methods.edit_message_reply_markup import EditMessageReplyMarkup
-from aiogram.types import Message, ContentType, CallbackQuery
+from aiogram.types import Message, ContentType, CallbackQuery, ReplyKeyboardRemove
 from commands.keyboard_commands import make_order as kb_make_order
 from commands.menu_commands import make_order as menu_make_order
 from data.models import User
