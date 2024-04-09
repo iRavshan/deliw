@@ -12,13 +12,12 @@ from data.models import User
 router = Router()
 user_repository = UserRepository()
 order_repository = OrderRepository()
-fsm_context = FSMContext()
  
 
 #-------- /START -------#
 @router.message(CommandStart())
-async def command_start(message: Message) -> None:
-    await clear_state()
+async def command_start(message: Message, state: FSMContext) -> None:
+    await clear_state(state)
     user_id = message.from_user.id
     ex_user = user_repository.find_by_id(user_id)
     if(ex_user is None):
@@ -37,7 +36,7 @@ async def command_info_button(message: Message) -> None:
 async def command_info_menu(message: Message) -> None:
     await send_info(message)
 
-async def send_info(message: Message):
+async def send_info(message: Message, state: FSMContext):
     await clear_state()
     await message.answer("<b>Zamin Water - tabiiy ichimlik suvi</b>\n\n💠 Tabiiy tog' suvi\n💠 10 bosqichli filtrda tozalangan\n💠 Uyingiz va ofisingiz uchun eng ma'qul\n🚗 Yetkazib berish mutlaqo <b>BEPUL</b>\n\n<b>💎 19 litr - 10.000 so'm</b>\n\n@zamin_water_bot orqali oson buyurtma bering")
 
@@ -51,7 +50,7 @@ async def command_contact_button(message: Message) -> None:
 async def command_contact_menu(message: Message) -> None:
     await send_contact(message)
 
-async def send_contact(message: Message):
+async def send_contact(message: Message, state: FSMContext):
     await clear_state()
     await message.answer("<b>Barcha viloyatlar uchun aloqa telefonlari:</b>\n\n📞 +998996740440\n\n📞 +998993710440")
 
@@ -67,7 +66,7 @@ async def command_orders_menu(message: Message) -> None:
     await get_active_orders(message)
 
 
-async def get_active_orders(message: Message):
+async def get_active_orders(message: Message, state: FSMContext):
     await clear_state()
     user = user_repository.find_by_id(message.from_user.id)
     
@@ -84,4 +83,4 @@ async def get_active_orders(message: Message):
 
 
 async def clear_state(state: FSMContext) -> None:
-    await fsm_context.clear()
+    await state.clear()
