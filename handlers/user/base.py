@@ -29,45 +29,45 @@ async def command_start(message: Message, state: FSMContext) -> None:
 
 #-------- /INFO -------#
 @router.message(F.text == about)
-async def command_info_button(message: Message) -> None:
-    await send_info(message)
+async def command_info_button(message: Message, state: FSMContext) -> None:
+    await send_info(message, state)
     
 @router.message(Command(info))
-async def command_info_menu(message: Message) -> None:
-    await send_info(message)
+async def command_info_menu(message: Message, state: FSMContext) -> None:
+    await send_info(message, state)
 
 async def send_info(message: Message, state: FSMContext):
-    await clear_state()
+    await clear_state(state)
     await message.answer("<b>Zamin Water - tabiiy ichimlik suvi</b>\n\n💠 Tabiiy tog' suvi\n💠 10 bosqichli filtrda tozalangan\n💠 Uyingiz va ofisingiz uchun eng ma'qul\n🚗 Yetkazib berish mutlaqo <b>BEPUL</b>\n\n<b>💎 19 litr - 10.000 so'm</b>\n\n@zamin_water_bot orqali oson buyurtma bering")
 
 
 #-------- /ALOQA -------#
 @router.message(F.text == contact)
-async def command_contact_button(message: Message) -> None:
-    await send_contact(message)
+async def command_contact_button(message: Message,state: FSMContext) -> None:
+    await send_contact(message, state)
 
 @router.message(Command(aloqa))
-async def command_contact_menu(message: Message) -> None:
-    await send_contact(message)
+async def command_contact_menu(message: Message, state: FSMContext) -> None:
+    await send_contact(message, state)
 
 async def send_contact(message: Message, state: FSMContext):
-    await clear_state()
+    await clear_state(state)
     await message.answer("<b>Barcha viloyatlar uchun aloqa telefonlari:</b>\n\n📞 +998996740440\n\n📞 +998993710440")
 
 
 #-------- /Buyurtmalarim -------#
 @router.message(F.text == active_orders)
-async def command_orders_button(message: Message) -> None:
-    await get_active_orders(message)
+async def command_orders_button(message: Message, state: FSMContext) -> None:
+    await get_active_orders(message, state)
 
 
 @router.message(Command(my_orders))
-async def command_orders_menu(message: Message) -> None:
-    await get_active_orders(message)
+async def command_orders_menu(message: Message, state: FSMContext) -> None:
+    await get_active_orders(message, state)
 
 
 async def get_active_orders(message: Message, state: FSMContext):
-    await clear_state()
+    await clear_state(state)
     user = user_repository.find_by_id(message.from_user.id)
     
     if(user is None):
