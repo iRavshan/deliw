@@ -12,6 +12,7 @@ from data.models import User
 router = Router()
 user_repository = UserRepository()
 order_repository = OrderRepository()
+fsm_context = FSMContext()
  
 
 #-------- /START -------#
@@ -83,4 +84,4 @@ async def get_active_orders(message: Message):
 
 
 async def clear_state(state: FSMContext) -> None:
-    await state.clear()
+    await fsm_context.clear()
