@@ -3,6 +3,7 @@ from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 from aiogram.filters.callback_data import CallbackData
+from aiogram.methods.edit_message_reply_markup import EditMessageReplyMarkup
 from aiogram.types import Message, ContentType, CallbackQuery
 from commands.keyboard_commands import make_order as kb_make_order
 from commands.menu_commands import make_order as menu_make_order
@@ -123,6 +124,8 @@ async def get_data_and_create_user(message: Message, data: Dict[str, Any]) -> No
     
 
 @router.callback_query(F.data == 'cancel')
-async def clear_state(query: CallbackQuery, state: FSMContext) -> None:
-    state.clear()
-    await query.answer(f"Amal bekor qilindi 🤚🏻", reply_markup=user_menu_markup())
+async def cancel_action(query: CallbackQuery, state: FSMContext) -> None:
+    await state.clear()
+    await query.bot.edit_message_reply_markup(chat_id=query.message.chat.id, message_id=query.message.message_id, inline_message_id=query.inline_message_id, reply_markup=None)
+    await query.bot.edit_message_text(text = f"Amal bekor qilindi 🛑", chat_id=query.message.chat.id, message_id=query.message.message_id, inline_message_id=query.inline_message_id, reply_markup=None)
+    await query.answer(f"Amal bekor qilindi 🛑", reply_markup=None)
