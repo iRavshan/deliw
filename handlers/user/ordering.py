@@ -52,7 +52,7 @@ async def get_numbers(message: Message, state: FSMContext) -> None:
             if(len(msg) < 6):
                 data = await state.update_data(numbers=message.text)
                 await state.clear()
-                await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b><br/><br/><i>Xaridingiz uchun tashakkur. Sizdek mijozlarga xizmat ko'rsatishdan mamnunmiz 🤝</i>", 
+                await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b>\n\n<i>Xaridingiz uchun tashakkur. Sizdek mijozlarga xizmat ko'rsatishdan mamnunmiz 🤝</i>", 
                                      reply_markup=user_menu_markup())
                 await get_data_and_make_order(message, data)
             else:
@@ -83,9 +83,12 @@ async def start_registration(message: Message, state: FSMContext) -> None:
 
 @router.message(UserRegistrationState.firstname)
 async def get_name(message: Message, state: FSMContext) -> None:
-    await state.update_data(firstname=message.text)
-    await state.set_state(UserRegistrationState.phone)
-    await message.answer(f"Telefon raqamingiz", reply_markup=request_contact.request_contact())
+    if(message.text.isalpha()):
+        await state.update_data(firstname=message.text)
+        await state.set_state(UserRegistrationState.phone)
+        await message.answer(f"Telefon raqamingiz", reply_markup=request_contact.request_contact())
+    else:
+        await message.answer(f"Iltimos ismingizni faqat harflardan foydalangan holda kiriting")
 
 
 @router.message(UserRegistrationState.phone)
