@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from loader import db_engine
 import pytz
 from sqlalchemy import ForeignKey
 from sqlalchemy import String
@@ -36,6 +35,3 @@ class Order(Base):
     numbers: Mapped[int]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now(pytz.timezone('Asia/Tashkent')))
 
-
-def migrate_data():
-    Base.metadata.create_all(bind=db_engine)
