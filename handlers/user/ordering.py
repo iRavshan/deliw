@@ -52,7 +52,7 @@ async def get_numbers(message: Message, state: FSMContext) -> None:
             if(len(msg) < 6):
                 data = await state.update_data(numbers=message.text)
                 await state.clear()
-                await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b>", 
+                await message.answer(f"<b>✅ Buyurtmangiz qabul qilindi</b><br/><br/><i>Xaridingiz uchun tashakkur. Sizdek mijozlarga xizmat ko'rsatishdan mamnunmiz 🤝</i>", 
                                      reply_markup=user_menu_markup())
                 await get_data_and_make_order(message, data)
             else:
