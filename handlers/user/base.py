@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message
+from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import CommandStart, Command
 from commands.menu_commands import aloqa, info, my_orders
@@ -70,10 +70,10 @@ async def get_active_orders(message: Message, state: FSMContext):
     await clear_state(state)
     user = user_repository.find_by_id(message.from_user.id)
     
-    if(user is None):
+    if(not user.is_registered):
         await message.answer(f"Siz hali buyurtma bermagansiz. Buyurtma berish uchun ushbu buyruqni\n /{my_orders}\nyoki pastdagi menyudan «{make_order}» tugmasini bosing")
     else:
-        orders = order_repository.get_active_orders(message.from_user.id)
+        orders = order_repository.get_active_orders(str(message.from_user.id))
         
         if(orders.count == 0):
             await message.answer(f"Barcha buyurtmalaringiz yetkazib berilgan")
