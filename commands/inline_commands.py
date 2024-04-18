@@ -1,1 +1,1 @@
-cancel = "🛑 Bekor qilish"
+cancel = "Bekor qilish"

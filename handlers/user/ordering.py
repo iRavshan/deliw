@@ -1,4 +1,3 @@
-from loader import bot
 from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
@@ -13,9 +12,11 @@ from data.repositories.order_repository import OrderRepository, Order
 from keyboards.default import request_contact, request_location
 from keyboards.default.keyboard_for_user import user_menu_markup
 from keyboards.inline.cancellation_keyboard import cancellation_markup
+from loader import bot
 from states.user_order import UserOrder
 from states.user_registration import UserRegistrationState
 from typing import Any, Dict
+from uuid import uuid4
 
 
 user_repository = UserRepository()
@@ -65,7 +66,7 @@ async def get_numbers(message: Message, state: FSMContext) -> None:
 
 async def get_data_and_make_order(message: Message, data: Dict[str, Any]) -> None:
     user = user_repository.find_by_id(message.from_user.id)
-    new_order = Order(numbers=data["numbers"])
+    new_order = Order(id=uuid4(), numbers=data["numbers"])
     new_order.user_id = user.tgId
     new_order = order_repository.create(new_order)
     admins = ["5719584090", "1919256193", "806335725"]
